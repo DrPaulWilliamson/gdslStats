@@ -1,0 +1,49 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# gdslStats
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of gdslStats is to provide a set of tools to simplify the process of conducting the types of analyses normally covered in an introductory statistics course - data description, tabulation, correlation and OLS and logistic regression. Highlights of the package include the ability to create publication-standard of 1-, 2- and 3-way versions of cross-tabulations.
+
+## Installation
+
+You can install the development version of gdslStats from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("DrPaulWilliamson/gdslStats")
+```
+
+## Rounding
+
+The `round` function provided as part of `gdslStats` is designed to to replace the `round` function supplied as part of R's `base` package. The `gdslStats` version of this function provides better support for the rounding of data objects that include columns (tables, matrices, data.frames and tibbles). Specifically, columns stored as factors or strings are ignored, rather than causing an error, and the option is provided to apply different roundings to different columns. In addition, for tables and tibbles, the way the data object is displayed is adjusted to match the rounding applied. Finally, more informative error messages are provided if asked to round the wrong kind of data.
+
+```{r example}
+library(gdslStats)
+new_round( data_in = 1.1234 )
+
+df <- data.frame( var = c("A", "B", "C"), v1 = rep(1.1234, 3), v2 = rep(1.1234, 3) )
+
+new_round( df, dp = 1 )
+
+new_round( df, dp = c(NA, 1, 2) )
+
+#' # Example of table with as_string = FALSE to follow
+
+new_round( tibble::as_tibble( df), dp = c(NA, 2, 1) )
+```
