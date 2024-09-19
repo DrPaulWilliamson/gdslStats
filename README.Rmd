@@ -35,15 +35,15 @@ The `round` function provided as part of `gdslStats` is designed to to replace t
 
 ```{r example}
 library(gdslStats)
-new_round( data_in = 1.1234 )
+round( data_in = 1.1234 )
 
 df <- data.frame( var = c("A", "B", "C"), v1 = rep(1.1234, 3), v2 = rep(1.1234, 3) )
 
-new_round( df, dp = 1 )
+round( df, dp = 1 )
 
-new_round( df, dp = c(NA, 1, 2) )
+round( df, dp = c(NA, 1, 2) )
 
 #' # Example of table with as_string = FALSE to follow
 
-new_round( tibble::as_tibble( df), dp = c(NA, 2, 1) )
+round( tibble::as_tibble( df), dp = c(NA, 2, 1) )
 ```

@@ -8,14 +8,14 @@
 #' @export
 #'
 #' @examples
-#' new_round( data_in = 1.1234 )
-#' new_round( data_in = rep(1.1234, 4), dp = c(1,2,3,4) )
+#' round( data_in = 1.1234 )
+#' round( data_in = rep(1.1234, 4), dp = c(1,2,3,4) )
 #' df <- data.frame( var = c("A", "B", "C"), v1 = rep(1.1234, 3), v2 = rep(1.1234, 3) )
-#' new_round( df, dp = c(2, 1) )
+#' round( df, dp = c(2, 1) )
 #' # Example of table with as_string = FALSE to follow
-#' new_round( tibble::as_tibble( df), dp = c(NA, 2, 1) )
+#' round( tibble::as_tibble( df), dp = c(NA, 2, 1) )
 #'
-new_round <- function( data_in, dp = 2, as_string = TRUE ) {
+round <- function( data_in, dp = 2, as_string = TRUE ) {
 
   data_in_class <- class(data_in)
 
@@ -53,7 +53,7 @@ new_round <- function( data_in, dp = 2, as_string = TRUE ) {
     data_length <- length( data_in )
 
     # Apply rounding for vectors
-    data_out <- round( data_in, dp[1] )
+    data_out <- base::round( data_in, dp[1] )
     if ( dp_length > 1 )
       warning(
         "It is not possible to round each value in a vector to different dp,\n",
@@ -91,7 +91,7 @@ new_round <- function( data_in, dp = 2, as_string = TRUE ) {
 
       if ( dp_length == 1) {
 
-        data_out <- round( data_in, dp )
+        data_out <- base::round( data_in, dp )
 
       } else {
 
@@ -110,7 +110,7 @@ new_round <- function( data_in, dp = 2, as_string = TRUE ) {
           # Return string values that are correctly rounded,
           # and display requested number of dp in each column
           for (i in 1:ncol( data_in )) {
-            data_out[ , i ] <- format( round( data_in[ , i ], dp[i] ),
+            data_out[ , i ] <- format( base::round( data_in[ , i ], dp[i] ),
                                        nsmall = dp[i] )
           }
         } # as_string = FALSE/TRUE
@@ -148,7 +148,7 @@ new_round <- function( data_in, dp = 2, as_string = TRUE ) {
       data_out <- data_in
       for ( i in 1:ncol( data_in ) ) {
         if ( is.numeric( data_in[ , i ] ) )
-          data_out[ , i ] <- round( data_in[,i], dp[i] )
+          data_out[ , i ] <- base::round( data_in[,i], dp[i] )
       }
     }
   } # is.data.frame
@@ -172,7 +172,7 @@ new_round <- function( data_in, dp = 2, as_string = TRUE ) {
       for ( i in 1:ncol( data_in ) ) {
         if ( is.numeric( data_in[[i]]) ) {
           # Change dp data are stored to
-          data_out[, i] <- round( data_in[ , i], dp[i] )
+          data_out[, i] <- base::round( data_in[ , i], dp[i] )
           # Change dp used to display data
           data_out[, i] <- tibble::num( data_out[[i]], digits = dp[i] )
         }
@@ -194,4 +194,4 @@ new_round <- function( data_in, dp = 2, as_string = TRUE ) {
 
   return( data_out )
 
-} # new_round
+} # round

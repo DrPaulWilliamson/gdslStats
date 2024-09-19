@@ -38,18 +38,23 @@ are provided if asked to round the wrong kind of data.
 
 ``` r
 library(gdslStats)
-new_round( data_in = 1.1234 )
+#> 
+#> Attaching package: 'gdslStats'
+#> The following object is masked from 'package:base':
+#> 
+#>     round
+round( data_in = 1.1234 )
 #> [1] 1.12
 
 df <- data.frame( var = c("A", "B", "C"), v1 = rep(1.1234, 3), v2 = rep(1.1234, 3) )
 
-new_round( df, dp = 1 )
+round( df, dp = 1 )
 #>   var  v1  v2
 #> 1   A 1.1 1.1
 #> 2   B 1.1 1.1
 #> 3   C 1.1 1.1
 
-new_round( df, dp = c(NA, 1, 2) )
+round( df, dp = c(NA, 1, 2) )
 #>   var  v1   v2
 #> 1   A 1.1 1.12
 #> 2   B 1.1 1.12
@@ -57,7 +62,7 @@ new_round( df, dp = c(NA, 1, 2) )
 
 #' # Example of table with as_string = FALSE to follow
 
-new_round( tibble::as_tibble( df), dp = c(NA, 2, 1) )
+round( tibble::as_tibble( df), dp = c(NA, 2, 1) )
 #> # A tibble: 3 × 3
 #>   var          v1        v2
 #>   <chr> <num:.2!> <num:.1!>
