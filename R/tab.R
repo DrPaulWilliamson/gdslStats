@@ -443,19 +443,15 @@ tab <- function( data=NULL, formula=NULL, weights,
   if ( stringr::str_detect(totals, "row") &
        stringr::str_detect(measure, "col") &
        n_vars != 1 )
-    warning("You have requested row totals for a column-based measure.\n",
-            "The resulting row totals are NOT the sum of the column values.\n",
-            "Rather, they are the overall proportion/percentage of\n",
-            "observations in the two-way table that fall in that row.",
+    warning("Row totals represent the overall proportion/percentage in ",
+            "that row, NOT the total of the row values",
             call. = F )
 
   if ( stringr::str_detect(totals, "col") &
        stringr::str_detect(measure, "row") &
        n_vars != 1 )
-    warning("You have requested column totals for a row-based measure.\n",
-            "The resulting column totals are NOT the sum of the row values.\n",
-            "Rather, they are the overall proportion/percentage of\n",
-            "observations in the two-way table that fall in that column.",
+    warning("Column totals represent the overall proportion/percentage in ",
+            "that column, not the total of the column values.",
             call. = F )
 
   ## (h) Check the total_3d request is valid

@@ -126,3 +126,33 @@ in one line of code.
 #'   round( dp = 0 ) |>
 #'   publish_tab( )
 ```
+
+## Grouping data
+
+The `group_data` function groups continuous data into categories,
+providing user-friendly labels for the resulting grouped categories. It
+is a wrapper to the base R `cut( )` function.
+
+``` r
+#' # Group original data into five equal-interval categories
+#' group_data( data = survey$Height, breaks = 5 ) |> head( )
+#'
+#' # Compare original to grouped values
+#' data.frame( original = survey$Height,
+#'             grouped = survey |> dplyr::select( Height ) |> group_data( 5 )
+#'           ) |> head( )
+#'
+#' # Class boundaries specified to n decimal places
+#' group_data( data = survey$Height, breaks = 5, output.dp = 4 ) |> head( )
+#'
+#' # Report class mid-point instead of upper and lower bounds
+#' group_data( data = survey$Height, breaks = 5, mid.point = TRUE ) |> head( )
+#'
+#' # Threshold for treating a data value as integer rather than continuous
+#' group_data( data = survey$Height, breaks = 5, integer.dp = 0 ) |> head( )
+#'
+#' # Exclude data values equal to lower class boundary; include data values
+#' # equal to upper class boundary
+#' group_data( data = survey$Height, breaks = 5,
+#'             include.lowest = FALSE, output.dp = 4 ) |> head( )
+```

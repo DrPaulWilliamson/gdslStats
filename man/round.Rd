@@ -4,14 +4,14 @@
 \alias{round}
 \title{Round numerical data}
 \usage{
-round(data_in, dp = 2, as_text = TRUE)
+round(data_in, dp = 2, text_table = TRUE)
 }
 \arguments{
-\item{data_in}{The data to be rounded, supplied as a (vector of) numeric or logical; or as data object of class table, matrix, data.frame or tibble (any of which can contain non-numeric columns)}
+\item{data_in}{The data to be rounded, supplied as a (vector of) numeric or logical; or as a data object of class table, matrix, data.frame or tibble (any of which can contain non-numeric columns). Note: tables or matrices with 4 or more dimensions not supported.}
 
 \item{dp}{The number of decimal places to round to (default is 2), supplied as either as single number to be applied to all numeric values, or as a series vector of values (one per column of the input data object, in column order, using NA for factor/string columns)}
 
-\item{as_text}{If TRUE (default is FALSE), and data_in is of class table, returns a table in which all numeric values have been converted to strings, so that the dp per column used for display matches that used for rounding}
+\item{text_table}{If TRUE (default), and data_in is of class table, and column-specific dp values are supplied, returns a table in which all numeric values have been converted to strings, so that the dp per column used for display matches that used for rounding}
 }
 \value{
 An updated version of the supplied data object containing rounded numeric values
@@ -39,8 +39,8 @@ round( data_in = survey2, dp = c(NA, 1, 2, 3, 4) )
 round( tibble::as_tibble( survey2), dp = c(NA, 4, 1, 3, 2) )
 
 # Rounding each column of a table differently
-# Note the need to use as_text = TRUE to display result as expected
+# Note the need to use text_table = TRUE to display result as expected
 survey |> tab( Age ~ Sex, measure = "row_pct" ) |> round( dp = c(1,3) )
 survey |> tab( Age ~ Sex, measure = "row_pct" ) |>
- round( dp = c(1,3), as_text = FALSE )
+ round( dp = c(1,3), text_table = FALSE )
 }

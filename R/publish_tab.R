@@ -282,6 +282,20 @@ publish_tab <- function( res, line_width = 1.2 ) {
     }
   }
 
+  # Right-align numeric values of body of table (ironically only
+  # required if numbers are supplied as text, but applied here
+  # even if numbers are supplied as numbers for safety's sake)
+  if (n_vars < 3 ) {
+    res_ft <- flextable::align( res_ft, part = "body",
+                                j = 2:table_cols, align = "right" )
+  } else {
+    for (i in 1:n_inner_tables)
+      j = (i-1)*n_inner_table_rows
+      res_ft <-
+        flextable::align( part = "body",
+                          j = j+2:j+n_inner_table_rows, align = "right" )
+  }
+
   # Calculate location of the FIRST inner table total_row and base_row (if any)
   if ( base_count == TRUE & metric_type == "col" )
     base_row <- n_inner_table_rows

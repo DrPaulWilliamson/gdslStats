@@ -1,8 +1,8 @@
 #' Round numerical data
 #'
-#' @param data_in The data to be rounded, supplied as a (vector of) numeric or logical; or as data object of class table, matrix, data.frame or tibble (any of which can contain non-numeric columns)
+#' @param data_in The data to be rounded, supplied as a (vector of) numeric or logical; or as a data object of class table, matrix, data.frame or tibble (any of which can contain non-numeric columns). Note: tables or matrices with 4 or more dimensions not supported.
 #' @param dp The number of decimal places to round to (default is 2), supplied as either as single number to be applied to all numeric values, or as a series vector of values (one per column of the input data object, in column order, using NA for factor/string columns)
-#' @param as_text If TRUE (default is FALSE), and data_in is of class table, returns a table in which all numeric values have been converted to strings, so that the dp per column used for display matches that used for rounding
+#' @param text_table If TRUE (default), and data_in is of class table, and column-specific dp values are supplied, returns a table in which all numeric values have been converted to strings, so that the dp per column used for display matches that used for rounding
 #'
 #' @return An updated version of the supplied data object containing rounded numeric values
 #' @export
@@ -27,11 +27,11 @@
 #' round( tibble::as_tibble( survey2), dp = c(NA, 4, 1, 3, 2) )
 #'
 #' # Rounding each column of a table differently
-#' # Note the need to use as_text = TRUE to display result as expected
+#' # Note the need to use text_table = TRUE to display result as expected
 #' survey |> tab( Age ~ Sex, measure = "row_pct" ) |> round( dp = c(1,3) )
 #' survey |> tab( Age ~ Sex, measure = "row_pct" ) |>
-#'  round( dp = c(1,3), as_text = FALSE )
-round <- function( data_in, dp = 2, as_text = TRUE ) {
+#'  round( dp = c(1,3), text_table = FALSE )
+round <- function( data_in, dp = 2, text_table = TRUE ) {
 
   data_in_class <- class(data_in)
 
@@ -105,6 +105,12 @@ round <- function( data_in, dp = 2, as_text = TRUE ) {
 
     if ( is.numeric(data_in) ) {
 
+      n_dims <- length( dim( data_in ) )
+
+      if ( n_dims > 3 )
+        stop( "gdslStats::round does not support rounding of tables or ",
+              "matrices with 4 or more dimensions" )
+
       if ( dp_length == 1) {
 
         data_out <- base::round( data_in, dp )
@@ -113,12 +119,23 @@ round <- function( data_in, dp = 2, as_text = TRUE ) {
 
         data_out <- data_in
 
-        if ( as_text == FALSE | is.matrix( data_in ) ) {
+        if ( text_table == FALSE | is.table( data_in ) == FALSE ) {
+
+          n_dims <- length( dim( data_in ) )
 
           # Return numeric values that are correctly rounded,
           # but display with same number of dp in each column
           for (i in 1:ncol( data_in )) {
-            data_out[ , i ] <- round( data_in[ , i ], dp[i] )
+
+            # If a 2-d table/matrix...
+            if (  n_dims == 2 ) {
+              data_out[ , i ] <- round( data_in[ , i ], dp[i] )
+            # if a 3d table
+            } else if ( n_dims == 3 ) {
+              for ( j in 1:dim( data_in[ 3 ]) )
+                data_out[ , i, j ] <- round( data_in[ , i, j ], dp[i] )
+            }
+
           }
 
         } else {
@@ -126,10 +143,20 @@ round <- function( data_in, dp = 2, as_text = TRUE ) {
           # Return string values that are correctly rounded,
           # and display requested number of dp in each column
           for (i in 1:ncol( data_in )) {
-            data_out[ , i ] <- format( base::round( data_in[ , i ], dp[i] ),
+
+            # If a 2-d table/matrix...
+            if (  n_dims == 2 ) {
+              data_out[ , i ] <- format( base::round( data_in[ , i ], dp[i] ),
+                                         nsmall = dp[i] )
+            } else if ( n_dims == 3 ) {
+              for ( j in 1:dim( data_in) [ 3 ] )
+                data_out[ , i , j ] <-
+                  format( base::round( data_in[ , i, j ], dp[i] ),
                                        nsmall = dp[i] )
+            }
           }
-        } # as_text = FALSE/TRUE
+
+        } # text_table = FALSE/TRUE
 
       } # dp_length = 1 or 1+
 
